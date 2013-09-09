@@ -4,7 +4,7 @@
 # env.query org.apache.cassandra.*:*
 # env.config cassandra/nodes_in_cluster
 # sets the 'config' and 'query' and 'url' variables for this script
-
+set -x
 if [ -z "$MUNIN_LIBDIR" ]; then
     MUNIN_LIBDIR="`dirname $(dirname "$0")`"
 fi
@@ -46,6 +46,8 @@ if test ! -f $CACHED || test `find "$CACHED" -mmin +2`; then
     java -jar "$JAR" \
       -url "$url" \
       -query "$query" \
+      -username "$username" \
+      -password "$password" \
       $ATTRIBUTES \
       > $CACHED
 

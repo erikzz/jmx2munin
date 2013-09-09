@@ -15,12 +15,14 @@ This is what the Munin script will call. So you should test this first. Of cours
          -url service:jmx:rmi:///jndi/rmi://localhost:7199/jmxrmi \
          -query "org.apache.cassandra.*:*"
 
-The "url" parameters specifies the JMX URL, the query selects the MBeans (and optionally also the attributes) to expose.
+The "url" parameters specifies the JMX URL, the query selects the MBeans (and optionally also the attributes) to expose. The optional username and password parameters ared use for the JMX authentication.
 
     java -jar jmx2munin.jar \
          -url service:jmx:rmi:///jndi/rmi://localhost:7199/jmxrmi \
          -query "org.apache.cassandra.*:*" \
-         -attribute org_apache_cassandra_db_storageservice_livenodes_size
+         -attribute org_apache_cassandra_db_storageservice_livenodes_size \
+         -username johndoe
+         -password secret
 
 The script that does the actual interaction with munin you can find in the contrib section. It's the one you should link in the your Munin plugin directory.
 

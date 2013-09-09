@@ -2,6 +2,8 @@ package org.vafer.jmx;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.management.AttributeNotFoundException;
 import javax.management.InstanceNotFoundException;
@@ -20,10 +22,18 @@ import javax.management.remote.JMXServiceURL;
 
 public final class Query {
 
-    public void run(String url, String expression, Filter filter, Output output) throws IOException, MalformedObjectNameException, InstanceNotFoundException, ReflectionException, IntrospectionException, AttributeNotFoundException, MBeanException {
+    public void run(String url,String user, String pass, String expression, Filter filter, Output output) throws IOException, MalformedObjectNameException, InstanceNotFoundException, ReflectionException, IntrospectionException, AttributeNotFoundException, MBeanException {
         JMXConnector connector = null;
         try {
-            connector = JMXConnectorFactory.connect(new JMXServiceURL(url));
+            Map<String, Object> env = new HashMap<String, Object>();
+            if (user != null) {
+                env.put(JMXConnector.CREDENTIALS, new String[] { user, pass });
+                env.put("username", user);
+                env.put("password", pass);
+            }else{
+                System.err.println("no username or password found");
+            }
+            connector = JMXConnectorFactory.connect(new JMXServiceURL(url), env);
             MBeanServerConnection connection = connector.getMBeanServerConnection();
             final Collection<ObjectInstance> mbeans = connection.queryMBeans(new ObjectName(expression), null);
 
